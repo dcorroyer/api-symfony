@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\VehiculeRepository;
 use DateTime;
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -85,9 +87,14 @@ class Vehicule
     #[Assert\Type('\DateTimeInterface')]
     private ?DateTimeInterface $updatedAt = null;
 
+    #[ORM\OneToMany(mappedBy: 'vehicule', targetEntity: Maintenance::class, orphanRemoval: true)]
+    #[Groups(['vehicule:read:item', 'vehicule:read:collection'])]
+    private Collection $maintenances;
+
     public function __construct()
     {
-        $this->createdAt = new DateTime();
+        $this->maintenances = new ArrayCollection();
+        $this->createdAt    = new DateTime();
     }
 
     /**
@@ -238,6 +245,44 @@ class Vehicule
     public function setUpdatedAt(?DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Maintenance>
+     */
+    public function getMaintenances(): Collection
+    {
+        return $this->maintenances;
+    }
+
+    /**
+     * @param Maintenance $maintenance
+     * @return $this
+     */
+    public function addMaintenance(Maintenance $maintenance): self
+    {
+        if (!$this->maintenances->contains($maintenance)) {
+            $this->maintenances[] = $maintenance;
+            $maintenance->setVehicule($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Maintenance $maintenance
+     * @return $this
+     */
+    public function removeMaintenance(Maintenance $maintenance): self
+    {
+        if ($this->maintenances->removeElement($maintenance)) {
+            // set the owning side to null (unless already changed)
+            if ($maintenance->getVehicule() === $this) {
+                $maintenance->setVehicule(null);
+            }
+        }
 
         return $this;
     }
