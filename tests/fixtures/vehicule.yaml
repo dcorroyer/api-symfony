@@ -1,0 +1,9 @@
+App\Entity\Vehicule:
+  vehicule_{1..10}:
+    type: 'motorcycle'
+    brand: <lastname()>
+    reference: <firstname()>
+    identification: <phoneNumber()>
+    modelyear: <numberBetween(1900, 2020)>
+    createdAt: <dateTime()>
+#author: '@author_*'

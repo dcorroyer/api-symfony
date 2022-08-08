@@ -1,0 +1,279 @@
+nelmio_api_doc:
+  areas: # to filter documented areas
+    path_patterns:
+      - ^/api(?!/docs$) # Accepts routes under /api except /api/doc
+    host_patterns: # document only routes with a host of the form api.*
+      - ^api\.
+  documentation:
+    info:
+      title: Mycar API
+      description: This api is provided by Maintain your car !
+      version: 1.0.0
+    servers:
+      - url: http://localhost:8080/api
+        description: Local
+    tags:
+      - name: vehicules
+        description: Vehicules management
+    paths:
+      /vehicules:
+        get:
+          tags:
+            - vehicules
+          summary: Vehicule collection get
+          security:
+            - bearerAuth: []
+          responses:
+            '200':
+              description: Successful operation
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/VehiculesSuccess'
+      /vehicule/create:
+        post:
+          tags:
+            - vehicules
+          summary: Vehicule item create
+          requestBody:
+            content:
+              'application/json':
+                schema:
+                  $ref: '#/components/schemas/VehiculesRequestBody'
+          security:
+            - bearerAuth: []
+          responses:
+            '200':
+              description: Successful operation
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/VehiculesSuccess'
+            '400':
+              description: Bad Request
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/InvalidRequest'
+      /vehicule/{id}:
+        get:
+          tags:
+            - vehicules
+          parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                type: integer
+          summary: Vehicule item get
+          security:
+            - bearerAuth: []
+          responses:
+            '200':
+              description: Successful operation
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/VehiculesSuccess'
+            '404':
+              description: Entity not found
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/NotFound'
+      /vehicule/{id}/update:
+        put:
+          tags:
+            - vehicules
+          parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                type: integer
+          requestBody:
+            content:
+              'application/json':
+                schema:
+                  $ref: '#/components/schemas/VehiculesRequestBody'
+          summary: Vehicule item update
+          security:
+            - bearerAuth: []
+          responses:
+            '200':
+              description: Successful operation
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/VehiculesSuccess'
+            '404':
+              description: Entity not found
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/NotFound'
+            '400':
+              description: Unauthorized
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/InvalidRequest'
+      /vehicule/{id}/delete:
+        delete:
+          tags:
+            - vehicules
+          parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                type: integer
+          summary: Vehicule item delete
+          security:
+            - bearerAuth: []
+          responses:
+            '200':
+              description: Successful operation
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/VehiculesSuccess'
+            '404':
+              description: Entity not found
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/NotFound'
+    components:
+      securitySchemes:
+        bearerAuth:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        401_Unauthorized:
+          description: Unauthorized
+      schemas:
+        Unauthorized:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: Code http response
+              example: 401
+            message:
+              type: string
+              example: "Unauthorized - You have to be connected to access this page."
+        Forbidden:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: Code http response
+              example: 403
+            message:
+              type: string
+              example: "Forbidden - You don't have rights to access this page."
+        NotFound:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: Code http response
+              example: 404
+            message:
+              type: string
+              example: "Not Found"
+        InvalidRequest:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: Code http response
+              example: 400
+            message:
+              type: string
+              example: "Invalid Request"
+        VehiculesSuccess:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: Code http response
+              example: 200
+            data:
+              type: object
+              properties:
+                vehicules:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Vehicules'
+        Vehicules:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 12345
+            type:
+              type: string
+              example: "motorcycle"
+            brand:
+              type: string
+              example: "Suzuki"
+            reference:
+              type: string
+              example: "GSF 650"
+            identification:
+              type: string
+              example: "DK-888-AX"
+            modelyear:
+              type: integer
+              example: 2008
+            createdAt:
+              type: string
+              example: "2022-08-08T17:12:40+00:00"
+            updatedAt:
+              type: string
+              example: "2022-08-08T17:12:40+00:00"
+        VehiculesRequestBody:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: vehicule id
+              example: 12345
+            type:
+              type: string
+              description: vehicule type (car, motorcycle, scooter)
+              example: "motorcycle"
+            brand:
+              type: string
+              description: vehicule brand
+              example: "Suzuki"
+            reference:
+              type: string
+              description: vehicule reference
+              example: "GSF 650"
+            identification:
+              type: string
+              description: vehicule identification
+              example: "DK-888-AX"
+            modelyear:
+              type: integer
+              description: vehicule modelyear
+              example: 2008
+            createdAt:
+              type: string
+              description: vehicule creation date
+              example: "2022-08-08T17:12:40+00:00"
+            updatedAt:
+              type: string
+              description: vehicule update date
+              example: "2022-08-08T17:12:40+00:00"
+          required:
+            - type
+            - brand
+            - reference
+            - identification
+            - modelyear
+            - createdAt

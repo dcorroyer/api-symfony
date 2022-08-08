@@ -1,0 +1,48 @@
+#setup your app
+
+path=$(ls -A 'vendor/')
+
+sudo systemctl restart docker
+
+if [ -f docker-compose.yml ]; then
+    echo "docker-compose.yml exists"
+else
+    echo "docker-compose.yml doesn't exists"
+    cp docker-compose.yml.dist docker-compose.yml
+    echo "docker-compose.yml copied from docker-compose.yml.dist"
+fi
+
+if [ -f .env ]; then
+    echo ".env exists"
+else
+    echo ".env doesn't exists"
+    cp .env.dist .env
+    echo ".env copied from .env.dist"
+fi
+
+if [ -f .env.test ]; then
+    echo ".env.test exists"
+else
+    echo ".env.test doesn't exists"
+    cp .env.test.dist .env.test
+    echo ".env.test copied from .env.test.dist"
+fi
+
+docker-compose up -d
+
+if [[ ! -z "$path" ]]; then
+    echo "vendor is not empty"
+    docker-compose run --rm php rm -r vendor/
+fi
+
+docker-compose run --rm php composer install
+
+docker-compose run --rm php php bin/console d:d:c
+docker-compose run --rm php php bin/console doctrine:migrations:migrate
+
+docker-compose run --rm php php bin/console --env=test doctrine:database:create
+docker-compose run --rm php php bin/console --env=test doctrine:migrations:migrate
+
+sudo chmod -R 777 .
+
+echo "process finished"
