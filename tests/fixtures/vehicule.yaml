@@ -6,4 +6,3 @@ App\Entity\Vehicule:
     identification: <phoneNumber()>
     modelyear: <numberBetween(1900, 2020)>
     createdAt: <dateTime()>
-#author: '@author_*'

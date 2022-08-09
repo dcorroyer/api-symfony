@@ -25,7 +25,15 @@ class Vehicule
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['vehicule:read:collection', 'vehicule:write:item'])]
+    #[Groups(
+        [
+            'vehicule:read:collection',
+            'vehicule:write:item',
+            'maintenance:read:collection',
+            'maintenance:read:item',
+            'maintenance:write:item'
+        ]
+    )]
     private int $id;
 
     #[ORM\Column(type: 'string', length: 20)]
@@ -88,7 +96,7 @@ class Vehicule
     private ?DateTimeInterface $updatedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'vehicule', targetEntity: Maintenance::class, orphanRemoval: true)]
-    #[Groups(['vehicule:read:item', 'vehicule:read:collection'])]
+    #[Groups(['vehicule:read:item', 'vehicule:read:collection', 'vehicule:write:item'])]
     private Collection $maintenances;
 
     public function __construct()

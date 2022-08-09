@@ -15,7 +15,6 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-#[Route('/api', name: 'api_')]
 class VehiculeController extends AbstractController
 {
     /**
@@ -62,11 +61,11 @@ class VehiculeController extends AbstractController
     #[Route('/vehicules', name: 'vehicule_read_collection', methods: 'GET')]
     public function getVehiculeCollection(): JsonResponse
     {
-        $vehicule = $this->vehiculeRepository->findAll();
+        $vehicules = $this->vehiculeRepository->findAll();
 
-        if ($vehicule) {
+        if ($vehicules) {
             return new JsonResponse(
-                $this->serializer->serialize($vehicule, 'json', ['groups' => 'vehicule:read:collection']),
+                $this->serializer->serialize($vehicules, 'json', ['groups' => 'vehicule:read:collection']),
                 Response::HTTP_OK,
                 ['Content-type' => 'application/json'],
                 true,
@@ -79,7 +78,7 @@ class VehiculeController extends AbstractController
     }
 
     #[Route('/vehicule/{id}', name: 'vehicule_read_item', methods: 'GET')]
-    public function getVehiculeItem($id): JsonResponse
+    public function getVehiculeItem(int $id): JsonResponse
     {
         $vehicule = $this->vehiculeRepository->find($id);
 
@@ -95,7 +94,6 @@ class VehiculeController extends AbstractController
         return new JsonResponse([
             'error' => "Cannot find the Vehicule $id, Vehicule not found"
         ], Response::HTTP_NOT_FOUND);
-
     }
 
     #[Route('/vehicule/create', name: 'vehicule_create_item', methods: 'POST')]
@@ -122,13 +120,20 @@ class VehiculeController extends AbstractController
     }
 
     #[Route('/vehicule/{id}/update', name: 'vehicule_update_item', methods: 'PUT')]
-    public function updateVehicule(Request $request, $id): JsonResponse
+    public function updateVehicule(Request $request, int $id): JsonResponse
     {
         $vehicule = $this->vehiculeRepository->find($id);
 
         if ($vehicule) {
-            $updatedVehicule = $this->serializer->deserialize($request->getContent(), Vehicule::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $vehicule]);
-            $errors          = $this->validator->validate($vehicule);
+            $updatedVehicule = $this->serializer->deserialize(
+                $request->getContent(),
+                Vehicule::class,
+                'json',
+                [AbstractNormalizer::OBJECT_TO_POPULATE => $vehicule]
+                )
+            ;
+
+            $errors = $this->validator->validate($updatedVehicule);
 
             if (count($errors) > 0) {
                 return new JsonResponse([
@@ -153,7 +158,7 @@ class VehiculeController extends AbstractController
     }
 
     #[Route('/vehicule/{id}/delete', name: 'vehicule_delete_item', methods: 'DELETE')]
-    public function deleteVehicule($id): JsonResponse
+    public function deleteVehicule(int $id): JsonResponse
     {
         $vehicule = $this->vehiculeRepository->find($id);
 
@@ -162,7 +167,7 @@ class VehiculeController extends AbstractController
             $this->manager->flush();
 
             return new JsonResponse(
-                $this->serializer->serialize($vehicule, 'json', ['groups' => 'vehicule:read:item']),
+                $this->serializer->serialize($vehicule, 'json', ['groups' => 'vehicule:write:item']),
                 Response::HTTP_OK,
                 ['Content-type' => 'application/json'],
                 true,

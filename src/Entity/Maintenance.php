@@ -21,7 +21,15 @@ class Maintenance
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['maintenance:read:collection', 'maintenance:write:item'])]
+    #[Groups(
+        [
+            'maintenance:read:collection',
+            'maintenance:write:item',
+            'vehicule:read:collection',
+            'vehicule:read:item',
+            'vehicule:write:item'
+        ]
+    )]
     private int $id;
 
     #[ORM\Column(type: 'string', length: 20)]
@@ -68,14 +76,13 @@ class Maintenance
     private DateTimeInterface $createdAt;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    #[Groups(['vehicule:read:item', 'vehicule:write:item'])]
+    #[Groups(['maintenance:read:item', 'maintenance:write:item'])]
     #[Assert\Type('\DateTimeInterface')]
     private ?DateTimeInterface $updatedAt = null;
 
     #[ORM\ManyToOne(targetEntity: Vehicule::class, inversedBy: 'maintenances')]
-    #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['maintenance:read:item', 'maintenance:read:collection', 'maintenance:write:item'])]
-    #[Assert\NotBlank()]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[Groups(['maintenance:write:item'])]
     private Vehicule $vehicule;
 
     public function __construct()

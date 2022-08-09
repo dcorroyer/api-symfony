@@ -1,0 +1,22 @@
+App\Entity\Maintenance:
+  maintenance_{1..5}:
+    type: 'repair'
+    date: <dateTime()>
+    amount: <buildingNumber()>
+    description: <title()>
+    createdAt: <dateTime()>
+    vehicule: '@vehicule_*'
+  maintenance_{6..10}:
+    type: 'maintenance'
+    date: <dateTime()>
+    amount: <buildingNumber()>
+    description: <title()>
+    createdAt: <dateTime()>
+    vehicule: '@vehicule_*'
+  maintenance_{11..20}:
+    type: 'restoration'
+    date: <dateTime()>
+    amount: <buildingNumber()>
+    description: <title()>
+    createdAt: <dateTime()>
+    vehicule: '@vehicule_*'
