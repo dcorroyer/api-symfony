@@ -100,7 +100,7 @@ class VehiculeController extends AbstractController
     public function createVehicule(Request $request): JsonResponse
     {
         $vehicule = $this->serializer->deserialize($request->getContent(), Vehicule::class, 'json');
-        $errors   = $this->validator->validate($vehicule);
+        $errors = $this->validator->validate($vehicule);
 
         if (count($errors) > 0) {
             return new JsonResponse([

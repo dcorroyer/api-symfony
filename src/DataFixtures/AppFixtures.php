@@ -39,7 +39,7 @@ class AppFixtures extends Fixture
                         Maintenance::TYPE['RESTORATION']
                     ]))
                     ->setDate($faker->dateTime())
-                    ->setAmount($faker->randomFloat())
+                    ->setAmount($faker->randomFloat(2))
                     ->setDescription($faker->sentence(mt_rand(3, 5)))
                     ->setVehicule($vehicule)
                 ;

@@ -102,7 +102,7 @@ class Vehicule
     public function __construct()
     {
         $this->maintenances = new ArrayCollection();
-        $this->createdAt    = new DateTime();
+        $this->createdAt = new DateTime();
     }
 
     /**

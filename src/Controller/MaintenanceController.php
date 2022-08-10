@@ -133,7 +133,7 @@ class MaintenanceController extends AbstractController
         }
 
         $maintenance = $this->serializer->deserialize($request->getContent(), Maintenance::class, 'json');
-        $errors      = $this->validator->validate($maintenance);
+        $errors = $this->validator->validate($maintenance);
 
         if (count($errors) > 0) {
             return new JsonResponse([

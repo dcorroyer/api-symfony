@@ -1,21 +1,18 @@
 <?php
 
-namespace App\Tests\Vehicules;
+namespace App\Tests\Vehicules\Controller;
 
-use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class listVehiculeTest extends WebTestCase
+class ListVehiculeTest extends WebTestCase
 {
-    use RefreshDatabaseTrait;
-
     /** @test */
     public function getVehiculeCollectionTest()
     {
         $client = static::createClient();
-        $client->request(
+        $client->jsonRequest(
             'GET',
-            'http://localhost:8080/api/vehicules'
+            'http://localhost:8080/vehicules'
         );
 
         $response = $client->getResponse();
@@ -23,6 +20,5 @@ class listVehiculeTest extends WebTestCase
         $this->assertEquals(200, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         self::assertNotEmpty($content);
-        print_r($content);
     }
 }
