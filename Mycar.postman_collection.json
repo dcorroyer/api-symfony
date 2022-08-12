@@ -12,13 +12,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/api/vehicules",
+					"raw": "localhost:8080/vehicules",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"api",
 						"vehicules"
 					]
 				}
@@ -31,16 +30,16 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/vehicule/1",
+					"raw": "http://localhost:8080/vehicule/1/maintenances",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"api",
 						"vehicule",
-						"1"
+						"1",
+						"maintenances"
 					]
 				}
 			},
@@ -61,14 +60,13 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/vehicule/create",
+					"raw": "http://localhost:8080/vehicule/create",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"api",
 						"vehicule",
 						"create"
 					]
@@ -82,14 +80,13 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/vehicule/7/delete",
+					"raw": "http://localhost:8080/vehicule/7/delete",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"api",
 						"vehicule",
 						"7",
 						"delete"
@@ -113,17 +110,102 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/vehicule/1/update",
+					"raw": "http://localhost:8080/vehicule/1/update",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"api",
 						"vehicule",
 						"1",
 						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /vehicule/{id}/maintenance/create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\": \"maintenance\",\n  \"date\": \"2022-08-08T20:49:59+00:00\",\n  \"amount\": 27.00036554,\n  \"description\": \"Enim sed sed laborum exercitationem earum.\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/vehicule/1/maintenance/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"vehicule",
+						"1",
+						"maintenance",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT /vehicule/{id}/maintenance/{id}/update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\": \"maintenance\",\n  \"date\": \"2022-08-08T20:49:59+00:00\",\n  \"amount\": 27.00036554,\n  \"description\": \"Enim sed sed laborum exercitationem earum.\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/vehicule/1/maintenance/3/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"vehicule",
+						"1",
+						"maintenance",
+						"3",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE /vehicule/{id}/maintenance/{id}/delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/vehicule/1/maintenance/3/delete",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"vehicule",
+						"1",
+						"maintenance",
+						"3",
+						"delete"
 					]
 				}
 			},

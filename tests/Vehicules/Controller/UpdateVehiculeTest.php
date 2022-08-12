@@ -1,23 +1,24 @@
 <?php
 
-namespace App\Tests\Vehicules;
+namespace App\Tests\Vehicules\Controller;
 
-use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
+use App\Tests\Vehicules\Service\VehiculeServiceTest;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class updateVehiculeTest extends WebTestCase
+class UpdateVehiculeTest extends WebTestCase
 {
-    use RefreshDatabaseTrait;
-
     /** @test */
     public function updateVehiculeTest()
     {
         $client = static::createClient();
+        $vehiculeService = $client->getContainer()->get(VehiculeServiceTest::class);
+        $data = $vehiculeService->createVehicule($client);
+
         $client->jsonRequest(
             'PUT',
-            'http://localhost:8080/api/vehicule/1/update',
+            'http://localhost:8080/vehicule/' . $data->getId() . '/update',
             [
-                'type' => 'motorcycle',
+                'type'  => 'motorcycle',
                 'brand' => 'Suzuki'
             ]
         );
@@ -27,18 +28,20 @@ class updateVehiculeTest extends WebTestCase
         $this->assertEquals(200, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         self::assertNotEmpty($content);
-        print_r($content);
+
+        $vehiculeService->deleteVehicule($client, $data->getId());
     }
 
     /** @test */
     public function updateVehiculeNotFoundTest()
     {
         $client = static::createClient();
+
         $client->jsonRequest(
             'PUT',
-            'http://localhost:8080/api/vehicule/122/update',
+            'http://localhost:8080/vehicule/122/update',
             [
-                'type' => 'motorcycle',
+                'type'  => 'motorcycle',
                 'brand' => 'Suzuki'
             ]
         );
@@ -48,16 +51,18 @@ class updateVehiculeTest extends WebTestCase
         $this->assertEquals(404, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         self::assertNotEmpty($content);
-        print_r($content);
     }
 
     /** @test */
     public function updateVehiculeBadRequestTest()
     {
         $client = static::createClient();
+        $vehiculeService = $client->getContainer()->get(VehiculeServiceTest::class);
+        $data = $vehiculeService->createVehicule($client);
+
         $client->jsonRequest(
             'PUT',
-            'http://localhost:8080/api/vehicule/1/update',
+            'http://localhost:8080/vehicule/' . $data->getId() . '/update',
             [
                 'type' => 'bad type'
             ]
@@ -68,6 +73,7 @@ class updateVehiculeTest extends WebTestCase
         $this->assertEquals(400, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         self::assertNotEmpty($content);
-        print_r($content);
+
+        $vehiculeService->deleteVehicule($client, $data->getId());
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Maintenance;
 use App\Entity\Vehicule;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -28,6 +29,23 @@ class AppFixtures extends Fixture
             ;
 
             $manager->persist($vehicule);
+
+            for ($m = 0; $m < mt_rand(5, 10); $m++) {
+                $maintenance = new Maintenance();
+
+                $maintenance->setType($faker->randomElement([
+                        Maintenance::TYPE['MAINTENANCE'],
+                        Maintenance::TYPE['REPAIR'],
+                        Maintenance::TYPE['RESTORATION']
+                    ]))
+                    ->setDate($faker->dateTime())
+                    ->setAmount($faker->randomFloat(2))
+                    ->setDescription($faker->sentence(mt_rand(3, 5)))
+                    ->setVehicule($vehicule)
+                ;
+
+                $manager->persist($maintenance);
+            }
         }
 
         $manager->flush();

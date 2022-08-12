@@ -1,21 +1,22 @@
 <?php
 
-namespace App\Tests\Vehicules;
+namespace App\Tests\Maintenances\Controller;
 
-use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
+use App\Tests\Maintenances\Service\MaintenanceServiceTest;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class deleteVehiculeTest extends WebTestCase
+class DeleteMaintenanceTest extends WebTestCase
 {
-    use RefreshDatabaseTrait;
-
     /** @test */
-    public function deleteVehiculeTest()
+    public function deleteMaintenanceTest()
     {
         $client = static::createClient();
-        $client->request(
+        $maintenanceService = $client->getContainer()->get(MaintenanceServiceTest::class);
+        $data = $maintenanceService->createMaintenance($client);
+
+        $client->jsonRequest(
             'DELETE',
-            'http://localhost:8080/api/vehicule/2/delete'
+            'http://localhost:8080/vehicule/1/maintenance/' . $data->getId() . '/delete'
         );
 
         $response = $client->getResponse();
@@ -23,16 +24,16 @@ class deleteVehiculeTest extends WebTestCase
         $this->assertEquals(200, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         self::assertNotEmpty($content);
-        print_r($content);
     }
 
     /** @test */
-    public function deleteVehiculeNotFoundTest()
+    public function deleteMaintenanceNotFoundTest()
     {
         $client = static::createClient();
-        $client->request(
+
+        $client->jsonRequest(
             'DELETE',
-            'http://localhost:8080/api/vehicule/122/delete'
+            'http://localhost:8080/vehicule/1/maintenance/122/delete'
         );
 
         $response = $client->getResponse();
@@ -40,6 +41,5 @@ class deleteVehiculeTest extends WebTestCase
         $this->assertEquals(404, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         self::assertNotEmpty($content);
-        print_r($content);
     }
 }
