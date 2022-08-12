@@ -30,7 +30,7 @@ class CreateVehiculeTest extends WebTestCase
 
         $response = $client->getResponse();
 
-        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertEquals(200, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
         self::assertNotEmpty($content);
 
