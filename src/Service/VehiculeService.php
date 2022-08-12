@@ -30,11 +30,11 @@ class VehiculeService
     }
 
     /**
-     * @param $vehicules
-     * @param $groups
+     * @param mixed $vehicules
+     * @param string $groups
      * @return JsonResponse
      */
-    public function findVehicules($vehicules, $groups): JsonResponse
+    public function findVehicules(mixed $vehicules, string $groups): JsonResponse
     {
         return new JsonResponse(
             $this->serializer->serialize($vehicules, 'json', ['groups' => $groups]),

@@ -31,11 +31,11 @@ class MaintenanceService
     }
 
     /**
-     * @param $maintenances
-     * @param $groups
+     * @param mixed $maintenances
+     * @param string $groups
      * @return JsonResponse
      */
-    public function findMaintenances($maintenances, $groups): JsonResponse
+    public function findMaintenances(mixed $maintenances, string $groups): JsonResponse
     {
         return new JsonResponse(
             $this->serializer->serialize($maintenances, 'json', ['groups' => $groups]),
@@ -113,3 +113,4 @@ class MaintenanceService
         );
     }
 }
+
