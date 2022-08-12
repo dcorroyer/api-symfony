@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Maintenance;
 use App\Entity\Vehicule;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,32 +13,32 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class VehiculeService
+class MaintenanceService
 {
     /**
-     * VehiculeService constructor.
+     * MaintenanceService constructor
      *
      * @param EntityManagerInterface $manager
-     * @param SerializerInterface    $serializer
-     * @param ValidatorInterface     $validator
+     * @param SerializerInterface $serializer
+     * @param ValidatorInterface $validator
      */
     public function __construct(
         private readonly EntityManagerInterface $manager,
         private readonly SerializerInterface    $serializer,
-        private readonly ValidatorInterface     $validator,
+        private readonly ValidatorInterface     $validator
     )
     {
     }
 
     /**
-     * @param $vehicules
+     * @param $maintenances
      * @param $groups
      * @return JsonResponse
      */
-    public function findVehicules($vehicules, $groups): JsonResponse
+    public function findMaintenances($maintenances, $groups): JsonResponse
     {
         return new JsonResponse(
-            $this->serializer->serialize($vehicules, 'json', ['groups' => $groups]),
+            $this->serializer->serialize($maintenances, 'json', ['groups' => $groups]),
             Response::HTTP_OK,
             ['Content-type' => 'application/json'],
             true,
@@ -47,30 +48,36 @@ class VehiculeService
     /**
      * @return JsonResponse
      */
-    public function notFoundVehicules(): JsonResponse
+    public function notFoundMaintenances(): JsonResponse
     {
         return new JsonResponse([
-            'error' => "Cannot find Vehicule(s)"
+            'error' => "Cannot find Maintenance(s)"
         ], Response::HTTP_NOT_FOUND);
     }
 
     /**
      * @param Request $request
-     * @param Vehicule|null $vehicule
+     * @param Maintenance|null $maintenance
+     * @param Vehicule $vehicule
      * @return JsonResponse
      */
-    public function editVehicule(Request $request, ?Vehicule $vehicule): JsonResponse
+    public function editMaintenance(Request $request, ?Maintenance $maintenance, Vehicule $vehicule): JsonResponse
     {
-        $vehicule?->setUpdatedAt(new DateTime());
+        if (!$maintenance) {
+            $maintenance = new Maintenance();
+            $maintenance->setVehicule($vehicule);
+        }
 
-        $vehicule = $this->serializer->deserialize(
+        $maintenance?->setUpdatedAt(new DateTime());
+
+        $maintenance = $this->serializer->deserialize(
             $request->getContent(),
-            Vehicule::class,
+            Maintenance::class,
             'json',
-            [AbstractNormalizer::OBJECT_TO_POPULATE => $vehicule] ?? []
+            [AbstractNormalizer::OBJECT_TO_POPULATE => $maintenance] ?? []
         );
 
-        $errors = $this->validator->validate($vehicule);
+        $errors = $this->validator->validate($maintenance);
 
         if (count($errors) > 0) {
             return new JsonResponse([
@@ -78,11 +85,11 @@ class VehiculeService
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $this->manager->persist($vehicule);
+        $this->manager->persist($maintenance);
         $this->manager->flush();
 
         return new JsonResponse(
-            $this->serializer->serialize($vehicule, 'json', ['groups' => 'vehicule:write:item']),
+            $this->serializer->serialize($maintenance, 'json', ['groups' => 'maintenance:write:item']),
             Response::HTTP_OK,
             ['Content-type' => 'application/json'],
             true,
@@ -90,16 +97,16 @@ class VehiculeService
     }
 
     /**
-     * @param Vehicule $vehicule
+     * @param Maintenance $maintenance
      * @return JsonResponse
      */
-    public function deleteVehicule(Vehicule $vehicule): JsonResponse
+    public function deleteMaintenance(Maintenance $maintenance): JsonResponse
     {
-        $this->manager->remove($vehicule);
+        $this->manager->remove($maintenance);
         $this->manager->flush();
 
         return new JsonResponse(
-            $this->serializer->serialize($vehicule, 'json', ['groups' => 'vehicule:write:item']),
+            $this->serializer->serialize($maintenance, 'json', ['groups' => 'maintenance:write:item']),
             Response::HTTP_OK,
             ['Content-type' => 'application/json'],
             true,

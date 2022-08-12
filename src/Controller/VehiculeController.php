@@ -36,7 +36,7 @@ class VehiculeController extends AbstractController
             );
         }
 
-        return $this->vehiculeService->notFoundVehicule();
+        return $this->vehiculeService->notFoundVehicules();
     }
 
     #[Route('/vehicule/{id}', name: 'vehicule_read_item', methods: 'GET')]
@@ -51,7 +51,7 @@ class VehiculeController extends AbstractController
             );
         }
 
-        return $this->vehiculeService->notFoundVehicule();
+        return $this->vehiculeService->notFoundVehicules();
     }
 
     #[Route('/vehicule/create', name: 'vehicule_create_item', methods: 'POST')]
@@ -69,7 +69,7 @@ class VehiculeController extends AbstractController
             return $this->vehiculeService->editVehicule($request, $vehicule);
         }
 
-        return $this->vehiculeService->notFoundVehicule();
+        return $this->vehiculeService->notFoundVehicules();
     }
 
     #[Route('/vehicule/{id}/delete', name: 'vehicule_delete_item', methods: 'DELETE')]
@@ -81,6 +81,6 @@ class VehiculeController extends AbstractController
             return $this->vehiculeService->deleteVehicule($vehicule);
         }
 
-        return $this->vehiculeService->notFoundVehicule();
+        return $this->vehiculeService->notFoundVehicules();
     }
 }
