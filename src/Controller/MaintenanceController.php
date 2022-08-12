@@ -2,69 +2,32 @@
 
 namespace App\Controller;
 
-use App\Entity\Maintenance;
 use App\Repository\MaintenanceRepository;
 use App\Repository\VehiculeRepository;
-use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\MaintenanceService;
+use App\Service\VehiculeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class MaintenanceController extends AbstractController
 {
     /**
-     * @var EntityManagerInterface $manager
-     */
-    protected EntityManagerInterface $manager;
-
-    /**
-     * @var MaintenanceRepository $maintenanceRepository
-     */
-    protected MaintenanceRepository $maintenanceRepository;
-
-    /**
-     * @var SerializerInterface $serializer
-     */
-    protected SerializerInterface $serializer;
-
-    /**
-     * @var ValidatorInterface $validator
-     */
-    protected ValidatorInterface $validator;
-
-    /**
-     * @var VehiculeRepository $vehiculeRepository
-     */
-    protected VehiculeRepository $vehiculeRepository;
-
-    /**
      * MaintenanceController constructor
      *
-     * @param EntityManagerInterface $manager
-     * @param MaintenanceRepository  $maintenanceRepository
-     * @param SerializerInterface    $serializer
-     * @param ValidatorInterface     $validator
-     * @param VehiculeRepository     $vehiculeRepository
+     * @param MaintenanceRepository $maintenanceRepository
+     * @param MaintenanceService $maintenanceService
+     * @param VehiculeRepository $vehiculeRepository
+     * @param VehiculeService $vehiculeService
      */
     public function __construct(
-        EntityManagerInterface $manager,
-        MaintenanceRepository  $maintenanceRepository,
-        SerializerInterface    $serializer,
-        ValidatorInterface     $validator,
-        VehiculeRepository     $vehiculeRepository
+        private readonly MaintenanceRepository  $maintenanceRepository,
+        private readonly MaintenanceService     $maintenanceService,
+        private readonly VehiculeRepository     $vehiculeRepository,
+        private readonly VehiculeService        $vehiculeService,
     )
     {
-        $this->maintenanceRepository = $maintenanceRepository;
-        $this->manager               = $manager;
-        $this->serializer            = $serializer;
-        $this->validator             = $validator;
-        $this->vehiculeRepository    = $vehiculeRepository;
     }
 
     #[Route('/vehicule/{id}/maintenances', name: 'maintenance_read_collection', methods: 'GET')]
@@ -73,25 +36,19 @@ class MaintenanceController extends AbstractController
         $vehicule = $this->vehiculeRepository->find($id);
 
         if (empty($vehicule)) {
-            return new JsonResponse([
-                'error' => "Cannot find any Vehicule"
-            ], Response::HTTP_NOT_FOUND);
+            return $this->vehiculeService->notFoundVehicules();
         }
 
         $maintenances = $vehicule->getMaintenances();
 
         if ($maintenances) {
-            return new JsonResponse(
-                $this->serializer->serialize($maintenances, 'json', ['groups' => 'maintenance:read:collection']),
-                Response::HTTP_OK,
-                ['Content-type' => 'application/json'],
-                true,
+            return $this->maintenanceService->findMaintenances(
+                $maintenances,
+                'maintenance:read:collection'
             );
         }
 
-        return new JsonResponse([
-            'error' => "Cannot find any Maintenance"
-        ], Response::HTTP_NOT_FOUND);
+        return $this->maintenanceService->notFoundMaintenances();
     }
 
     #[Route('/vehicule/{vehiculeId}/maintenance/{maintenanceId}', name: 'maintenance_read_item', methods: 'GET')]
@@ -100,25 +57,19 @@ class MaintenanceController extends AbstractController
         $vehicule = $this->vehiculeRepository->find($vehiculeId);
 
         if (empty($vehicule)) {
-            return new JsonResponse([
-                'error' => "Cannot find Vehicule $vehiculeId"
-            ], Response::HTTP_NOT_FOUND);
+            return $this->vehiculeService->notFoundVehicules();
         }
 
         $maintenance = $this->maintenanceRepository->findMaintenanceFromVehicule($vehicule, $maintenanceId);
 
         if ($maintenance) {
-            return new JsonResponse(
-                $this->serializer->serialize($maintenance, 'json', ['groups' => 'maintenance:read:item']),
-                Response::HTTP_OK,
-                ['Content-type' => 'application/json'],
-                true,
+            return $this->maintenanceService->findMaintenances(
+                $maintenance,
+                'maintenance:read:item'
             );
         }
 
-        return new JsonResponse([
-            'error' => "Cannot find the Maintenance $maintenanceId, Maintenance not found"
-        ], Response::HTTP_NOT_FOUND);
+        return $this->maintenanceService->notFoundMaintenances();
     }
 
     #[Route('/vehicule/{id}/maintenance/create', name: 'maintenance_create_item', methods: 'POST')]
@@ -127,31 +78,10 @@ class MaintenanceController extends AbstractController
         $vehicule = $this->vehiculeRepository->find($id);
 
         if (empty($vehicule)) {
-            return new JsonResponse([
-                'error' => "Cannot find Vehicule $id"
-            ], Response::HTTP_NOT_FOUND);
+            return $this->vehiculeService->notFoundVehicules();
         }
 
-        $maintenance = $this->serializer->deserialize($request->getContent(), Maintenance::class, 'json');
-        $errors = $this->validator->validate($maintenance);
-
-        if (count($errors) > 0) {
-            return new JsonResponse([
-                'error' => (string)$errors
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        $maintenance->setVehicule($vehicule);
-
-        $this->manager->persist($maintenance);
-        $this->manager->flush();
-
-        return new JsonResponse(
-            $this->serializer->serialize($maintenance, 'json', ['groups' => 'maintenance:write:item']),
-            Response::HTTP_CREATED,
-            ['Content-type' => 'application/json'],
-            true,
-        );
+        return $this->maintenanceService->editMaintenance($request, null, $vehicule);
     }
 
     #[Route('/vehicule/{vehiculeId}/maintenance/{maintenanceId}/update', name: 'maintenance_update_item', methods: 'PUT')]
@@ -160,43 +90,16 @@ class MaintenanceController extends AbstractController
         $vehicule = $this->vehiculeRepository->find($vehiculeId);
 
         if (empty($vehicule)) {
-            return new JsonResponse([
-                'error' => "Cannot find Vehicule $vehiculeId"
-            ], Response::HTTP_NOT_FOUND);
+            return $this->vehiculeService->notFoundVehicules();
         }
 
         $maintenance = $this->maintenanceRepository->findMaintenanceFromVehicule($vehicule, $maintenanceId);
 
         if ($maintenance) {
-            $updatedMaintenance = $this->serializer->deserialize(
-                $request->getContent(),
-                Maintenance::class,
-                'json',
-                [AbstractNormalizer::OBJECT_TO_POPULATE => $maintenance]
-            );
-
-            $errors = $this->validator->validate($updatedMaintenance);
-
-            if (count($errors) > 0) {
-                return new JsonResponse([
-                    'error' => (string)$errors
-                ], Response::HTTP_BAD_REQUEST);
-            }
-
-            $updatedMaintenance->setUpdatedAt(new DateTime());
-            $this->manager->flush();
-
-            return new JsonResponse(
-                $this->serializer->serialize($maintenance, 'json', ['groups' => 'maintenance:write:item']),
-                Response::HTTP_OK,
-                ['Content-type' => 'application/json'],
-                true,
-            );
+            return $this->maintenanceService->editMaintenance($request, $maintenance, $vehicule);
         }
 
-        return new JsonResponse([
-            'error' => "Cannot update the Maintenance $maintenanceId, Maintenance not found"
-        ], Response::HTTP_NOT_FOUND);
+        return $this->maintenanceService->notFoundMaintenances();
     }
 
     #[Route('/vehicule/{vehiculeId}/maintenance/{maintenanceId}/delete', name: 'maintenance_delete_item', methods: 'DELETE')]
@@ -205,27 +108,15 @@ class MaintenanceController extends AbstractController
         $vehicule = $this->vehiculeRepository->find($vehiculeId);
 
         if (empty($vehicule)) {
-            return new JsonResponse([
-                'error' => "Cannot find Vehicule $vehiculeId"
-            ], Response::HTTP_NOT_FOUND);
+            return $this->vehiculeService->notFoundVehicules();
         }
 
         $maintenance = $this->maintenanceRepository->findMaintenanceFromVehicule($vehicule, $maintenanceId);
 
         if ($maintenance) {
-            $this->manager->remove($maintenance);
-            $this->manager->flush();
-
-            return new JsonResponse(
-                $this->serializer->serialize($maintenance, 'json', ['groups' => 'maintenance:write:item']),
-                Response::HTTP_OK,
-                ['Content-type' => 'application/json'],
-                true,
-            );
+            return $this->maintenanceService->deleteMaintenance($maintenance);
         }
 
-        return new JsonResponse([
-            'error' => "Cannot delete the Maintenance $maintenanceId, Maintenance not found"
-        ], Response::HTTP_NOT_FOUND);
+        return $this->maintenanceService->notFoundMaintenances();
     }
 }
