@@ -9,8 +9,7 @@ use function json_decode;
 
 class CreateVehiculeTest extends WebTestCase
 {
-    /** @test */
-    public function createVehiculeTest()
+    public function testCreateVehicule()
     {
         $faker  = Factory::create('en-EN');
         $client = static::createClient();
@@ -18,7 +17,7 @@ class CreateVehiculeTest extends WebTestCase
 
         $client->jsonRequest(
             'POST',
-            'http://localhost:8080/vehicule/create',
+            'http://localhost:8080/api/vehicule/create',
             [
                 'type'           => 'motorcycle',
                 'identification' => $faker->creditCardNumber(),
@@ -37,15 +36,14 @@ class CreateVehiculeTest extends WebTestCase
         $vehiculeService->deleteVehicule($client, $content);
     }
 
-    /** @test */
-    public function createVehiculeBadRequestTest()
+    public function testCreateVehiculeBadRequest()
     {
         $faker = Factory::create('en-EN');
         $client = static::createClient();
 
         $client->jsonRequest(
             'POST',
-            'http://localhost:8080/vehicule/create',
+            'http://localhost:8080/api/vehicule/create',
             [
                 'type'           => 'bad type',
                 'identification' => $faker->creditCardNumber(),

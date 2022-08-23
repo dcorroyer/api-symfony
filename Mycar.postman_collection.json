@@ -30,7 +30,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/vehicule/1/maintenances",
+					"raw": "http://localhost:8080/api/vehicule/1/maintenances",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -60,7 +60,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/vehicule/create",
+					"raw": "http://localhost:8080/api/vehicule/create",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -80,7 +80,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/vehicule/7/delete",
+					"raw": "http://localhost:8080/api/vehicule/7/delete",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -110,7 +110,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/vehicule/1/update",
+					"raw": "http://localhost:8080/api/vehicule/1/update",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -140,7 +140,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/vehicule/1/maintenance/create",
+					"raw": "http://localhost:8080/api/vehicule/1/maintenance/create",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -171,7 +171,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/vehicule/1/maintenance/3/update",
+					"raw": "http://localhost:8080/api/vehicule/1/maintenance/3/update",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -194,7 +194,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/vehicule/1/maintenance/3/delete",
+					"raw": "http://localhost:8080/api/vehicule/1/maintenance/3/delete",
 					"protocol": "http",
 					"host": [
 						"localhost"

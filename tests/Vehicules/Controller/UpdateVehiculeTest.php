@@ -7,8 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UpdateVehiculeTest extends WebTestCase
 {
-    /** @test */
-    public function updateVehiculeTest()
+    public function testUpdateVehicule()
     {
         $client = static::createClient();
         $vehiculeService = $client->getContainer()->get(VehiculeServiceTest::class);
@@ -16,7 +15,7 @@ class UpdateVehiculeTest extends WebTestCase
 
         $client->jsonRequest(
             'PUT',
-            'http://localhost:8080/vehicule/' . $data->getId() . '/update',
+            'http://localhost:8080/api/vehicule/' . $data->getId() . '/update',
             [
                 'type'  => 'motorcycle',
                 'brand' => 'Suzuki'
@@ -32,14 +31,13 @@ class UpdateVehiculeTest extends WebTestCase
         $vehiculeService->deleteVehicule($client, $data->getId());
     }
 
-    /** @test */
-    public function updateVehiculeNotFoundTest()
+    public function testUpdateVehiculeNotFound()
     {
         $client = static::createClient();
 
         $client->jsonRequest(
             'PUT',
-            'http://localhost:8080/vehicule/122/update',
+            'http://localhost:8080/api/vehicule/122/update',
             [
                 'type'  => 'motorcycle',
                 'brand' => 'Suzuki'
@@ -53,8 +51,7 @@ class UpdateVehiculeTest extends WebTestCase
         self::assertNotEmpty($content);
     }
 
-    /** @test */
-    public function updateVehiculeBadRequestTest()
+    public function testUpdateVehiculeBadRequest()
     {
         $client = static::createClient();
         $vehiculeService = $client->getContainer()->get(VehiculeServiceTest::class);
@@ -62,7 +59,7 @@ class UpdateVehiculeTest extends WebTestCase
 
         $client->jsonRequest(
             'PUT',
-            'http://localhost:8080/vehicule/' . $data->getId() . '/update',
+            'http://localhost:8080/api/vehicule/' . $data->getId() . '/update',
             [
                 'type' => 'bad type'
             ]

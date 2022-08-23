@@ -9,8 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DeleteVehiculeTest extends WebTestCase
 {
-    /** @test */
-    public function deleteVehiculeTest()
+    public function testDeleteVehicule()
     {
         $client = static::createClient();
         $vehiculeService = $client->getContainer()->get(VehiculeServiceTest::class);
@@ -18,7 +17,7 @@ class DeleteVehiculeTest extends WebTestCase
 
         $client->jsonRequest(
             'DELETE',
-            'http://localhost:8080/vehicule/' . $data->getId() . '/delete'
+            'http://localhost:8080/api/vehicule/' . $data->getId() . '/delete'
         );
 
         $response = $client->getResponse();
@@ -28,13 +27,12 @@ class DeleteVehiculeTest extends WebTestCase
         self::assertNotEmpty($content);
     }
 
-    /** @test */
-    public function deleteVehiculeNotFoundTest()
+    public function testDeleteVehiculeNotFound()
     {
         $client = static::createClient();
         $client->jsonRequest(
             'DELETE',
-            'http://localhost:8080/vehicule/122/delete'
+            'http://localhost:8080/api/vehicule/122/delete'
         );
 
         $response = $client->getResponse();

@@ -6,13 +6,12 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ListVehiculeTest extends WebTestCase
 {
-    /** @test */
-    public function getVehiculeCollectionTest()
+    public function testGetVehiculeCollection()
     {
         $client = static::createClient();
         $client->jsonRequest(
             'GET',
-            'http://localhost:8080/vehicules'
+            'http://localhost:8080/api/vehicules'
         );
 
         $response = $client->getResponse();

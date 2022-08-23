@@ -6,13 +6,12 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class GetVehiculeTest extends WebTestCase
 {
-    /** @test */
-    public function getVehiculeItemTest()
+    public function testGetVehiculeItem()
     {
         $client = static::createClient();
         $client->jsonRequest(
             'GET',
-            'http://localhost:8080/vehicule/1'
+            'http://localhost:8080/api/vehicule/1'
         );
 
         $response = $client->getResponse();
@@ -22,13 +21,12 @@ class GetVehiculeTest extends WebTestCase
         self::assertNotEmpty($content);
     }
 
-    /** @test */
-    public function getVehiculeItemNotFoundTest()
+    public function testGetVehiculeItemNotFound()
     {
         $client = static::createClient();
         $client->jsonRequest(
             'GET',
-            'http://localhost:8080/vehicule/122'
+            'http://localhost:8080/api/vehicule/122'
         );
 
         $response = $client->getResponse();
