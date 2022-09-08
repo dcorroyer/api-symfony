@@ -7,6 +7,9 @@ security:
                 class: App\Entity\User
                 property: email
     firewalls:
+        docs:
+            pattern: ^/api/docs
+            security: false
         login:
             pattern: ^/api/login
             stateless: true
@@ -19,11 +22,6 @@ security:
             stateless: true
             provider: app_user_provider
             jwt: ~
-        users:
-            pattern: ^/users
-            stateless: true
-            provider: app_user_provider
-            jwt: ~
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
@@ -32,7 +30,6 @@ security:
             provider: app_user_provider
 
     access_control:
-        - { path: ^/users,     roles: ROLE_ADMIN }
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
 

@@ -13,6 +13,7 @@
         "fakerphp/faker": "^1.20",
         "lexik/jwt-authentication-bundle": "^2.16",
         "nelmio/api-doc-bundle": "^4.9",
+        "sensio/framework-extra-bundle": "^6.2",
         "symfony/asset": "6.1.*",
         "symfony/console": "6.1.*",
         "symfony/doctrine-bridge": "6.1.*",

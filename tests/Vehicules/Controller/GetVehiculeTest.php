@@ -2,6 +2,7 @@
 
 namespace App\Tests\Vehicules\Controller;
 
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class GetVehiculeTest extends WebTestCase
@@ -9,9 +10,13 @@ class GetVehiculeTest extends WebTestCase
     public function testGetVehiculeItem()
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
+
         $client->jsonRequest(
             'GET',
-            'http://localhost:8080/api/vehicule/1'
+            '/api/vehicule/1'
         );
 
         $response = $client->getResponse();
@@ -24,9 +29,13 @@ class GetVehiculeTest extends WebTestCase
     public function testGetVehiculeItemNotFound()
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
+
         $client->jsonRequest(
             'GET',
-            'http://localhost:8080/api/vehicule/122'
+            '/api/vehicule/122'
         );
 
         $response = $client->getResponse();

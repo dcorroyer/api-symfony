@@ -2,6 +2,7 @@
 
 namespace App\Tests\Vehicules\Controller;
 
+use App\Repository\UserRepository;
 use App\Tests\Vehicules\Service\VehiculeServiceTest;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -12,10 +13,13 @@ class UpdateVehiculeTest extends WebTestCase
         $client = static::createClient();
         $vehiculeService = $client->getContainer()->get(VehiculeServiceTest::class);
         $data = $vehiculeService->createVehicule($client);
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
 
         $client->jsonRequest(
             'PUT',
-            'http://localhost:8080/api/vehicule/' . $data->getId() . '/update',
+            '/api/vehicule/' . $data->getId() . '/update',
             [
                 'type'  => 'motorcycle',
                 'brand' => 'Suzuki'
@@ -34,10 +38,13 @@ class UpdateVehiculeTest extends WebTestCase
     public function testUpdateVehiculeNotFound()
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
 
         $client->jsonRequest(
             'PUT',
-            'http://localhost:8080/api/vehicule/122/update',
+            '/api/vehicule/122/update',
             [
                 'type'  => 'motorcycle',
                 'brand' => 'Suzuki'
@@ -56,10 +63,13 @@ class UpdateVehiculeTest extends WebTestCase
         $client = static::createClient();
         $vehiculeService = $client->getContainer()->get(VehiculeServiceTest::class);
         $data = $vehiculeService->createVehicule($client);
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
 
         $client->jsonRequest(
             'PUT',
-            'http://localhost:8080/api/vehicule/' . $data->getId() . '/update',
+            '/api/vehicule/' . $data->getId() . '/update',
             [
                 'type' => 'bad type'
             ]

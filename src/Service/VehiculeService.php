@@ -47,16 +47,6 @@ class VehiculeService
     }
 
     /**
-     * @return JsonResponse
-     */
-    public function notFoundVehicules(): JsonResponse
-    {
-        return new JsonResponse([
-            'error' => "Cannot find Vehicule(s)"
-        ], Response::HTTP_NOT_FOUND);
-    }
-
-    /**
      * @param Request $request
      * @param User $user
      * @param Vehicule|null $vehicule

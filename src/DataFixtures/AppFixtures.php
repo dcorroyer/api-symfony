@@ -21,15 +21,6 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('en-EN');
-        $admin = new User();
-        $hash = $this->hasherInterface->hashPassword($admin, "password");
-
-        $admin->setEmail("admin@api.com")
-            ->setPassword($hash)
-            ->setRoles(["ROLE_ADMIN"])
-        ;
-
-        $manager->persist($admin);
 
         for($u = 0; $u < 10; $u++) {
             $user = new User();
@@ -78,5 +69,10 @@ class AppFixtures extends Fixture
         }
 
         $manager->flush();
+    }
+
+    public function getOrder(): int
+    {
+        return 2;
     }
 }

@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Controller;
+namespace App\Service;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
-class ApiController extends AbstractController
+class ApiService
 {
     /**
      * @var int $statusCode = 200
@@ -57,7 +55,6 @@ class ApiController extends AbstractController
         return new JsonResponse($data, $this->getStatusCode(), $headers);
     }
 
-
     /**
      * @param string $success
      * @param array $headers
@@ -72,7 +69,6 @@ class ApiController extends AbstractController
 
         return new JsonResponse($data, $this->getStatusCode(), $headers);
     }
-
 
     /**
      * @param string $message
@@ -108,22 +104,5 @@ class ApiController extends AbstractController
     public function respondCreated(array $data = []): JsonResponse
     {
         return $this->setStatusCode(201)->response($data);
-    }
-
-    /**
-     * @param Request $request
-     * @return Request
-     */
-    protected function transformJsonBody(Request $request): Request
-    {
-        $data = json_decode($request->getContent(), true);
-
-        if ($data === null) {
-            return $request;
-        }
-
-        $request->request->replace($data);
-
-        return $request;
     }
 }

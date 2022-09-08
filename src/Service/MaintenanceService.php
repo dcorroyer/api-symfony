@@ -46,16 +46,6 @@ class MaintenanceService
     }
 
     /**
-     * @return JsonResponse
-     */
-    public function notFoundMaintenances(): JsonResponse
-    {
-        return new JsonResponse([
-            'error' => "Cannot find Maintenance(s)"
-        ], Response::HTTP_NOT_FOUND);
-    }
-
-    /**
      * @param Request $request
      * @param Maintenance|null $maintenance
      * @param Vehicule $vehicule
