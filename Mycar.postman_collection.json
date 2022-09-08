@@ -1,0 +1,298 @@
+{
+	"info": {
+		"_postman_id": "0c50de9c-2ed0-41bf-bd2f-77fdf977e97a",
+		"name": "Mycar",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8367652"
+	},
+	"item": [
+		{
+			"name": "POST login_check",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"admin@api.com\",\n    \"password\": \"password\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/login_check",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"login_check"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET users",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NjI2MzI3ODMsImV4cCI6MTY2MjYzNjM4Mywicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6ImFkbWluQGFwaS5jb20ifQ.K6JgSZ6W4vfb4ffW5db0EIH7OaCYPQkXTqHjLqNWYg7EdnUXc-VHnNHYpCqcgHeldA8lNtRSSCmNb9FO6c51K-cv8__0uqQkO6-Bx8quRG2U_eZ6N22LnQ1UiESPN92fXGJXji5hklEpIdMDo3C0Q_gmz1EYP4QrYeBC1woAasgRq9cbaOtP-yecwrfcLecy6otTx2YRNQfMajLofjfl6C9JVa9g48tmFNxUO-_tTCnDXCdLPnhAdHxlE_xRWtv53KCRYorW2e9181Qfbw5l0ZuBhskv8S2SOrIX49P4zj-nk2g-OQM1F_MHwLTWB5jX5LcYfkwTBx0rIzLpFu2k_w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST vehicule/create",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NjI2MzI3ODMsImV4cCI6MTY2MjYzNjM4Mywicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6ImFkbWluQGFwaS5jb20ifQ.K6JgSZ6W4vfb4ffW5db0EIH7OaCYPQkXTqHjLqNWYg7EdnUXc-VHnNHYpCqcgHeldA8lNtRSSCmNb9FO6c51K-cv8__0uqQkO6-Bx8quRG2U_eZ6N22LnQ1UiESPN92fXGJXji5hklEpIdMDo3C0Q_gmz1EYP4QrYeBC1woAasgRq9cbaOtP-yecwrfcLecy6otTx2YRNQfMajLofjfl6C9JVa9g48tmFNxUO-_tTCnDXCdLPnhAdHxlE_xRWtv53KCRYorW2e9181Qfbw5l0ZuBhskv8S2SOrIX49P4zj-nk2g-OQM1F_MHwLTWB5jX5LcYfkwTBx0rIzLpFu2k_w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"type\": \"motorcycle\",\n    \"identification\": \"dk891ax\",\n    \"brand\": \"Suzuki\",\n    \"reference\": \"GSF 650 N\",\n    \"modelyear\": 2009\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/vehicule/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"vehicule",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET vehicules",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NjI2MzI3ODMsImV4cCI6MTY2MjYzNjM4Mywicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6ImFkbWluQGFwaS5jb20ifQ.K6JgSZ6W4vfb4ffW5db0EIH7OaCYPQkXTqHjLqNWYg7EdnUXc-VHnNHYpCqcgHeldA8lNtRSSCmNb9FO6c51K-cv8__0uqQkO6-Bx8quRG2U_eZ6N22LnQ1UiESPN92fXGJXji5hklEpIdMDo3C0Q_gmz1EYP4QrYeBC1woAasgRq9cbaOtP-yecwrfcLecy6otTx2YRNQfMajLofjfl6C9JVa9g48tmFNxUO-_tTCnDXCdLPnhAdHxlE_xRWtv53KCRYorW2e9181Qfbw5l0ZuBhskv8S2SOrIX49P4zj-nk2g-OQM1F_MHwLTWB5jX5LcYfkwTBx0rIzLpFu2k_w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/vehicules",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"vehicules"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET vehicules/{id}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NjI2MzI3ODMsImV4cCI6MTY2MjYzNjM4Mywicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6ImFkbWluQGFwaS5jb20ifQ.K6JgSZ6W4vfb4ffW5db0EIH7OaCYPQkXTqHjLqNWYg7EdnUXc-VHnNHYpCqcgHeldA8lNtRSSCmNb9FO6c51K-cv8__0uqQkO6-Bx8quRG2U_eZ6N22LnQ1UiESPN92fXGJXji5hklEpIdMDo3C0Q_gmz1EYP4QrYeBC1woAasgRq9cbaOtP-yecwrfcLecy6otTx2YRNQfMajLofjfl6C9JVa9g48tmFNxUO-_tTCnDXCdLPnhAdHxlE_xRWtv53KCRYorW2e9181Qfbw5l0ZuBhskv8S2SOrIX49P4zj-nk2g-OQM1F_MHwLTWB5jX5LcYfkwTBx0rIzLpFu2k_w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/vehicule/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"vehicule",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET vehicules/{id}/maintenances",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NjI2MzI3ODMsImV4cCI6MTY2MjYzNjM4Mywicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6ImFkbWluQGFwaS5jb20ifQ.K6JgSZ6W4vfb4ffW5db0EIH7OaCYPQkXTqHjLqNWYg7EdnUXc-VHnNHYpCqcgHeldA8lNtRSSCmNb9FO6c51K-cv8__0uqQkO6-Bx8quRG2U_eZ6N22LnQ1UiESPN92fXGJXji5hklEpIdMDo3C0Q_gmz1EYP4QrYeBC1woAasgRq9cbaOtP-yecwrfcLecy6otTx2YRNQfMajLofjfl6C9JVa9g48tmFNxUO-_tTCnDXCdLPnhAdHxlE_xRWtv53KCRYorW2e9181Qfbw5l0ZuBhskv8S2SOrIX49P4zj-nk2g-OQM1F_MHwLTWB5jX5LcYfkwTBx0rIzLpFu2k_w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/vehicule/1/maintenances",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"vehicule",
+						"1",
+						"maintenances"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST maintenance/create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"type\": \"maintenance\",\n    \"date\": \"2022-05-25\",\n    \"amount\": 199.95,\n    \"description\": \"Changement pneu arrière\",\n    \"vehicule\": \"/api/vehicules/1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/vehicule/1/maintenance/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"vehicule",
+						"1",
+						"maintenance",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET maintenances",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NjI2MzI3ODMsImV4cCI6MTY2MjYzNjM4Mywicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6ImFkbWluQGFwaS5jb20ifQ.K6JgSZ6W4vfb4ffW5db0EIH7OaCYPQkXTqHjLqNWYg7EdnUXc-VHnNHYpCqcgHeldA8lNtRSSCmNb9FO6c51K-cv8__0uqQkO6-Bx8quRG2U_eZ6N22LnQ1UiESPN92fXGJXji5hklEpIdMDo3C0Q_gmz1EYP4QrYeBC1woAasgRq9cbaOtP-yecwrfcLecy6otTx2YRNQfMajLofjfl6C9JVa9g48tmFNxUO-_tTCnDXCdLPnhAdHxlE_xRWtv53KCRYorW2e9181Qfbw5l0ZuBhskv8S2SOrIX49P4zj-nk2g-OQM1F_MHwLTWB5jX5LcYfkwTBx0rIzLpFu2k_w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/vehicule/1/maintenances",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"vehicule",
+						"1",
+						"maintenances"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET maintenance/{id}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NjI2MzI3ODMsImV4cCI6MTY2MjYzNjM4Mywicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6ImFkbWluQGFwaS5jb20ifQ.K6JgSZ6W4vfb4ffW5db0EIH7OaCYPQkXTqHjLqNWYg7EdnUXc-VHnNHYpCqcgHeldA8lNtRSSCmNb9FO6c51K-cv8__0uqQkO6-Bx8quRG2U_eZ6N22LnQ1UiESPN92fXGJXji5hklEpIdMDo3C0Q_gmz1EYP4QrYeBC1woAasgRq9cbaOtP-yecwrfcLecy6otTx2YRNQfMajLofjfl6C9JVa9g48tmFNxUO-_tTCnDXCdLPnhAdHxlE_xRWtv53KCRYorW2e9181Qfbw5l0ZuBhskv8S2SOrIX49P4zj-nk2g-OQM1F_MHwLTWB5jX5LcYfkwTBx0rIzLpFu2k_w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/vehicule/1/maintenance/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"vehicule",
+						"1",
+						"maintenance",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
