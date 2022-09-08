@@ -2,12 +2,14 @@
 
 namespace App\Service;
 
+use App\Entity\User;
 use App\Entity\Vehicule;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -45,22 +47,18 @@ class VehiculeService
     }
 
     /**
-     * @return JsonResponse
-     */
-    public function notFoundVehicules(): JsonResponse
-    {
-        return new JsonResponse([
-            'error' => "Cannot find Vehicule(s)"
-        ], Response::HTTP_NOT_FOUND);
-    }
-
-    /**
      * @param Request $request
+     * @param User $user
      * @param Vehicule|null $vehicule
      * @return JsonResponse
      */
-    public function editVehicule(Request $request, ?Vehicule $vehicule): JsonResponse
+    public function editVehicule(Request $request, UserInterface $user, ?Vehicule $vehicule): JsonResponse
     {
+        if (!$vehicule) {
+            $vehicule = new Vehicule();
+            $vehicule->setUser($user);
+        }
+
         $vehicule?->setUpdatedAt(new DateTime());
 
         $vehicule = $this->serializer->deserialize(

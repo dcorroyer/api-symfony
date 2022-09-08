@@ -2,6 +2,7 @@
 
 namespace App\Tests\Maintenances\Controller;
 
+use App\Repository\UserRepository;
 use App\Tests\Maintenances\Service\MaintenanceServiceTest;
 use Faker\Factory;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -9,16 +10,18 @@ use function json_decode;
 
 class CreateMaintenanceTest extends WebTestCase
 {
-    /** @test */
-    public function createMaintenanceTest()
+    public function testCreateMaintenance()
     {
         $faker = Factory::create('en-EN');
         $client = static::createClient();
         $maintenanceService = $client->getContainer()->get(MaintenanceServiceTest::class);
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
 
         $client->jsonRequest(
             'POST',
-            'http://localhost:8080/vehicule/1/maintenance/create',
+            '/api/vehicule/1/maintenance/create',
             [
                 'type'        => 'maintenance',
                 'date'        => "2022-08-08T20:49:59+00:00",
@@ -36,15 +39,17 @@ class CreateMaintenanceTest extends WebTestCase
         $maintenanceService->deleteMaintenance($client, $content);
     }
 
-    /** @test */
-    public function createMaintenanceBadRequestTest()
+    public function testCreateMaintenanceBadRequest()
     {
         $faker = Factory::create('en-EN');
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
 
         $client->jsonRequest(
             'POST',
-            'http://localhost:8080/vehicule/1/maintenance/create',
+            '/api/vehicule/1/maintenance/create',
             [
                 'type'        => 'bad type',
                 'date'        => "2022-08-08T20:49:59+00:00",

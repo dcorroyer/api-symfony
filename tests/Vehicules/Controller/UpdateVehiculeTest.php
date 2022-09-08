@@ -2,21 +2,24 @@
 
 namespace App\Tests\Vehicules\Controller;
 
+use App\Repository\UserRepository;
 use App\Tests\Vehicules\Service\VehiculeServiceTest;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UpdateVehiculeTest extends WebTestCase
 {
-    /** @test */
-    public function updateVehiculeTest()
+    public function testUpdateVehicule()
     {
         $client = static::createClient();
         $vehiculeService = $client->getContainer()->get(VehiculeServiceTest::class);
         $data = $vehiculeService->createVehicule($client);
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
 
         $client->jsonRequest(
             'PUT',
-            'http://localhost:8080/vehicule/' . $data->getId() . '/update',
+            '/api/vehicule/' . $data->getId() . '/update',
             [
                 'type'  => 'motorcycle',
                 'brand' => 'Suzuki'
@@ -32,14 +35,16 @@ class UpdateVehiculeTest extends WebTestCase
         $vehiculeService->deleteVehicule($client, $data->getId());
     }
 
-    /** @test */
-    public function updateVehiculeNotFoundTest()
+    public function testUpdateVehiculeNotFound()
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
 
         $client->jsonRequest(
             'PUT',
-            'http://localhost:8080/vehicule/122/update',
+            '/api/vehicule/122/update',
             [
                 'type'  => 'motorcycle',
                 'brand' => 'Suzuki'
@@ -53,16 +58,18 @@ class UpdateVehiculeTest extends WebTestCase
         self::assertNotEmpty($content);
     }
 
-    /** @test */
-    public function updateVehiculeBadRequestTest()
+    public function testUpdateVehiculeBadRequest()
     {
         $client = static::createClient();
         $vehiculeService = $client->getContainer()->get(VehiculeServiceTest::class);
         $data = $vehiculeService->createVehicule($client);
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
 
         $client->jsonRequest(
             'PUT',
-            'http://localhost:8080/vehicule/' . $data->getId() . '/update',
+            '/api/vehicule/' . $data->getId() . '/update',
             [
                 'type' => 'bad type'
             ]

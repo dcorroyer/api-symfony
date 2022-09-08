@@ -2,21 +2,24 @@
 
 namespace App\Tests\Maintenances\Controller;
 
+use App\Repository\UserRepository;
 use App\Tests\Maintenances\Service\MaintenanceServiceTest;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DeleteMaintenanceTest extends WebTestCase
 {
-    /** @test */
-    public function deleteMaintenanceTest()
+    public function testDeleteMaintenance()
     {
         $client = static::createClient();
         $maintenanceService = $client->getContainer()->get(MaintenanceServiceTest::class);
         $data = $maintenanceService->createMaintenance($client);
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
 
         $client->jsonRequest(
             'DELETE',
-            'http://localhost:8080/vehicule/1/maintenance/' . $data->getId() . '/delete'
+            '/api/vehicule/1/maintenance/' . $data->getId() . '/delete'
         );
 
         $response = $client->getResponse();
@@ -26,14 +29,16 @@ class DeleteMaintenanceTest extends WebTestCase
         self::assertNotEmpty($content);
     }
 
-    /** @test */
-    public function deleteMaintenanceNotFoundTest()
+    public function testDeleteMaintenanceNotFound()
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
 
         $client->jsonRequest(
             'DELETE',
-            'http://localhost:8080/vehicule/1/maintenance/122/delete'
+            '/api/vehicule/1/maintenance/122/delete'
         );
 
         $response = $client->getResponse();

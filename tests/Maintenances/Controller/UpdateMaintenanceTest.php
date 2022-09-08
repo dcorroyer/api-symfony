@@ -2,21 +2,24 @@
 
 namespace App\Tests\Maintenances\Controller;
 
+use App\Repository\UserRepository;
 use App\Tests\Maintenances\Service\MaintenanceServiceTest;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UpdateMaintenanceTest extends WebTestCase
 {
-    /** @test */
-    public function updateMaintenanceTest()
+    public function testUpdateMaintenance()
     {
         $client = static::createClient();
         $maintenanceService = $client->getContainer()->get(MaintenanceServiceTest::class);
         $data = $maintenanceService->createMaintenance($client);
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
 
         $client->jsonRequest(
             'PUT',
-            'http://localhost:8080/vehicule/1/maintenance/' . $data->getId() . '/update',
+            '/api/vehicule/1/maintenance/' . $data->getId() . '/update',
             [
                 'type'  => 'repair',
                 'amount' => 199.99
@@ -32,14 +35,16 @@ class UpdateMaintenanceTest extends WebTestCase
         $maintenanceService->deleteMaintenance($client, $data->getId());
     }
 
-    /** @test */
-    public function updateMaintenanceNotFoundTest()
+    public function testUpdateMaintenanceNotFound()
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
 
         $client->jsonRequest(
             'PUT',
-            'http://localhost:8080/vehicule/1/maintenance/122/update',
+            '/api/vehicule/1/maintenance/122/update',
             [
                 'type'  => 'repair'
             ]
@@ -52,16 +57,18 @@ class UpdateMaintenanceTest extends WebTestCase
         self::assertNotEmpty($content);
     }
 
-    /** @test */
-    public function updateMaintenanceBadRequestTest()
+    public function testUpdateMaintenanceBadRequest()
     {
         $client = static::createClient();
         $maintenanceService = $client->getContainer()->get(MaintenanceServiceTest::class);
         $data = $maintenanceService->createMaintenance($client);
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
 
         $client->jsonRequest(
             'PUT',
-            'http://localhost:8080/vehicule/1/maintenance/' . $data->getId() . '/update',
+            '/api/vehicule/1/maintenance/' . $data->getId() . '/update',
             [
                 'type' => 'bad type'
             ]

@@ -2,41 +2,49 @@
 
 namespace App\Controller;
 
-use App\Repository\MaintenanceRepository;
-use App\Repository\VehiculeRepository;
-use App\Service\MaintenanceService;
+use App\Service\ApiService;
 use App\Service\VehiculeService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Service\MaintenanceService;
+use App\Repository\VehiculeRepository;
+use App\Repository\MaintenanceRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[Route('/api')]
 class MaintenanceController extends AbstractController
 {
     /**
      * MaintenanceController constructor
      *
+     * @param ApiService $apiService
      * @param MaintenanceRepository $maintenanceRepository
      * @param MaintenanceService $maintenanceService
+     * @param Security $security
      * @param VehiculeRepository $vehiculeRepository
      * @param VehiculeService $vehiculeService
      */
     public function __construct(
-        private readonly MaintenanceRepository  $maintenanceRepository,
-        private readonly MaintenanceService     $maintenanceService,
-        private readonly VehiculeRepository     $vehiculeRepository,
-        private readonly VehiculeService        $vehiculeService,
+        private readonly ApiService            $apiService,
+        private readonly MaintenanceRepository $maintenanceRepository,
+        private readonly MaintenanceService    $maintenanceService,
+        private readonly Security              $security,
+        private readonly VehiculeRepository    $vehiculeRepository,
+        private readonly VehiculeService       $vehiculeService,
     )
     {
     }
 
-    #[Route('/vehicule/{id}/maintenances', name: 'maintenance_read_collection', methods: 'GET')]
+    #[Route('/vehicule/{id}/maintenances', methods: 'GET')]
     public function getMaintenanceCollection(int $id): JsonResponse
     {
-        $vehicule = $this->vehiculeRepository->find($id);
+        $user = $this->security->getUser();
+        $vehicule = $this->vehiculeRepository->findVehiculeFromUser($user, $id);
 
         if (empty($vehicule)) {
-            return $this->vehiculeService->notFoundVehicules();
+            return $this->apiService->respondNotFound(sprintf('Vehicule %s not found', $id));
         }
 
         $maintenances = $vehicule->getMaintenances();
@@ -48,16 +56,17 @@ class MaintenanceController extends AbstractController
             );
         }
 
-        return $this->maintenanceService->notFoundMaintenances();
+        return $this->apiService->respondNotFound(sprintf('Maintenances not found'));
     }
 
-    #[Route('/vehicule/{vehiculeId}/maintenance/{maintenanceId}', name: 'maintenance_read_item', methods: 'GET')]
+    #[Route('/vehicule/{vehiculeId}/maintenance/{maintenanceId}', methods: 'GET')]
     public function getMaintenanceItem(int $vehiculeId, int $maintenanceId): JsonResponse
     {
-        $vehicule = $this->vehiculeRepository->find($vehiculeId);
+        $user = $this->security->getUser();
+        $vehicule = $this->vehiculeRepository->findVehiculeFromUser($user, $vehiculeId);
 
         if (empty($vehicule)) {
-            return $this->vehiculeService->notFoundVehicules();
+            return $this->apiService->respondNotFound(sprintf('Vehicule %s not found', $vehiculeId));
         }
 
         $maintenance = $this->maintenanceRepository->findMaintenanceFromVehicule($vehicule, $maintenanceId);
@@ -69,28 +78,30 @@ class MaintenanceController extends AbstractController
             );
         }
 
-        return $this->maintenanceService->notFoundMaintenances();
+        return $this->apiService->respondNotFound(sprintf('Maintenance %s not found', $maintenance));
     }
 
-    #[Route('/vehicule/{id}/maintenance/create', name: 'maintenance_create_item', methods: 'POST')]
+    #[Route('/vehicule/{id}/maintenance/create', methods: 'POST')]
     public function createMaintenance(Request $request, int $id): JsonResponse
     {
-        $vehicule = $this->vehiculeRepository->find($id);
+        $user = $this->security->getUser();
+        $vehicule = $this->vehiculeRepository->findVehiculeFromUser($user, $id);
 
         if (empty($vehicule)) {
-            return $this->vehiculeService->notFoundVehicules();
+            return $this->apiService->respondNotFound(sprintf('Vehicule %s not found', $id));
         }
 
         return $this->maintenanceService->editMaintenance($request, null, $vehicule);
     }
 
-    #[Route('/vehicule/{vehiculeId}/maintenance/{maintenanceId}/update', name: 'maintenance_update_item', methods: 'PUT')]
+    #[Route('/vehicule/{vehiculeId}/maintenance/{maintenanceId}/update', methods: 'PUT')]
     public function updateMaintenance(Request $request, int $vehiculeId, int $maintenanceId): JsonResponse
     {
-        $vehicule = $this->vehiculeRepository->find($vehiculeId);
+        $user = $this->security->getUser();
+        $vehicule = $this->vehiculeRepository->findVehiculeFromUser($user, $vehiculeId);
 
         if (empty($vehicule)) {
-            return $this->vehiculeService->notFoundVehicules();
+            return $this->apiService->respondNotFound(sprintf('Vehicule %s not found', $vehiculeId));
         }
 
         $maintenance = $this->maintenanceRepository->findMaintenanceFromVehicule($vehicule, $maintenanceId);
@@ -99,16 +110,17 @@ class MaintenanceController extends AbstractController
             return $this->maintenanceService->editMaintenance($request, $maintenance, $vehicule);
         }
 
-        return $this->maintenanceService->notFoundMaintenances();
+        return $this->apiService->respondNotFound(sprintf('Maintenance %s not found', $maintenance));
     }
 
-    #[Route('/vehicule/{vehiculeId}/maintenance/{maintenanceId}/delete', name: 'maintenance_delete_item', methods: 'DELETE')]
+    #[Route('/vehicule/{vehiculeId}/maintenance/{maintenanceId}/delete', methods: 'DELETE')]
     public function deleteMaintenance(int $vehiculeId, int $maintenanceId): JsonResponse
     {
-        $vehicule = $this->vehiculeRepository->find($vehiculeId);
+        $user = $this->security->getUser();
+        $vehicule = $this->vehiculeRepository->findVehiculeFromUser($user, $vehiculeId);
 
         if (empty($vehicule)) {
-            return $this->vehiculeService->notFoundVehicules();
+            return $this->apiService->respondNotFound(sprintf('Vehicule %s not found', $vehiculeId));
         }
 
         $maintenance = $this->maintenanceRepository->findMaintenanceFromVehicule($vehicule, $maintenanceId);
@@ -117,6 +129,6 @@ class MaintenanceController extends AbstractController
             return $this->maintenanceService->deleteMaintenance($maintenance);
         }
 
-        return $this->maintenanceService->notFoundMaintenances();
+        return $this->apiService->respondNotFound(sprintf('Maintenance %s not found', $maintenance));
     }
 }

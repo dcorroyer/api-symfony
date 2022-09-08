@@ -25,7 +25,6 @@ class Maintenance
         [
             'maintenance:read:collection',
             'maintenance:write:item',
-            'vehicule:read:collection',
             'vehicule:read:item',
             'vehicule:write:item'
         ]
@@ -96,17 +95,6 @@ class Maintenance
     public function getId(): int
     {
         return $this->id;
-    }
-
-    /**
-     * @param int $id
-     * @return Maintenance
-     */
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     /**

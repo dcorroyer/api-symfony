@@ -96,8 +96,13 @@ class Vehicule
     private ?DateTimeInterface $updatedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'vehicule', targetEntity: Maintenance::class, orphanRemoval: true)]
-    #[Groups(['vehicule:read:item', 'vehicule:read:collection', 'vehicule:write:item'])]
+    #[Groups(['vehicule:read:item', 'vehicule:write:item'])]
     private Collection $maintenances;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'vehicules')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[Groups(['vehicule:write:item'])]
+    private User $user;
 
     public function __construct()
     {
@@ -111,17 +116,6 @@ class Vehicule
     public function getId(): int
     {
         return $this->id;
-    }
-
-    /**
-     * @param int $id
-     * @return Vehicule
-     */
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     /**
@@ -291,6 +285,18 @@ class Vehicule
                 $maintenance->setVehicule(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

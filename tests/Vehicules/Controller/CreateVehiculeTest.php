@@ -2,23 +2,25 @@
 
 namespace App\Tests\Vehicules\Controller;
 
+use App\Repository\UserRepository;
 use App\Tests\Vehicules\Service\VehiculeServiceTest;
 use Faker\Factory;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use function json_decode;
 
 class CreateVehiculeTest extends WebTestCase
 {
-    /** @test */
-    public function createVehiculeTest()
+    public function testCreateVehicule()
     {
         $faker  = Factory::create('en-EN');
         $client = static::createClient();
         $vehiculeService = $client->getContainer()->get(VehiculeServiceTest::class);
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
 
         $client->jsonRequest(
             'POST',
-            'http://localhost:8080/vehicule/create',
+            '/api/vehicule/create',
             [
                 'type'           => 'motorcycle',
                 'identification' => $faker->creditCardNumber(),
@@ -37,15 +39,17 @@ class CreateVehiculeTest extends WebTestCase
         $vehiculeService->deleteVehicule($client, $content);
     }
 
-    /** @test */
-    public function createVehiculeBadRequestTest()
+    public function testCreateVehiculeBadRequest()
     {
         $faker = Factory::create('en-EN');
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
 
         $client->jsonRequest(
             'POST',
-            'http://localhost:8080/vehicule/create',
+            '/api/vehicule/create',
             [
                 'type'           => 'bad type',
                 'identification' => $faker->creditCardNumber(),

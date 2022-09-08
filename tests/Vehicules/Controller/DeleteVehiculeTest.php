@@ -2,23 +2,24 @@
 
 namespace App\Tests\Vehicules\Controller;
 
-use App\Entity\Vehicule;
+use App\Repository\UserRepository;
 use App\Tests\Vehicules\Service\VehiculeServiceTest;
-use Faker\Factory;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DeleteVehiculeTest extends WebTestCase
 {
-    /** @test */
-    public function deleteVehiculeTest()
+    public function testDeleteVehicule()
     {
         $client = static::createClient();
         $vehiculeService = $client->getContainer()->get(VehiculeServiceTest::class);
         $data = $vehiculeService->createVehicule($client);
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
 
         $client->jsonRequest(
             'DELETE',
-            'http://localhost:8080/vehicule/' . $data->getId() . '/delete'
+            '/api/vehicule/' . $data->getId() . '/delete'
         );
 
         $response = $client->getResponse();
@@ -28,13 +29,16 @@ class DeleteVehiculeTest extends WebTestCase
         self::assertNotEmpty($content);
     }
 
-    /** @test */
-    public function deleteVehiculeNotFoundTest()
+    public function testDeleteVehiculeNotFound()
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
+        
         $client->jsonRequest(
             'DELETE',
-            'http://localhost:8080/vehicule/122/delete'
+            '/api/vehicule/122/delete'
         );
 
         $response = $client->getResponse();

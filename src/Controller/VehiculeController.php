@@ -2,32 +2,49 @@
 
 namespace App\Controller;
 
-use App\Repository\VehiculeRepository;
+use App\Service\ApiService;
 use App\Service\VehiculeService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Repository\VehiculeRepository;
+use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+
+#[Route('/api')]
 class VehiculeController extends AbstractController
 {
     /**
      * VehiculeController constructor.
      *
+     * @param ApiService $apiService
+     * @param Security $security
      * @param VehiculeRepository $vehiculeRepository
-     * @param VehiculeService    $vehiculeService
+     * @param VehiculeService $vehiculeService
      */
     public function __construct(
+        private readonly ApiService         $apiService,
+        private readonly Security           $security,
         private readonly VehiculeRepository $vehiculeRepository,
         private readonly VehiculeService    $vehiculeService
     )
     {
     }
 
-    #[Route('/vehicules', name: 'vehicule_read_collection', methods: 'GET')]
+    #[Route('/vehicules', methods: 'GET')]
+    #[OA\Get(description: "list")]
+    #[OA\Response(
+        response: 200,
+        description: "Ok",
+        content: []
+    )]
+    #[OA\Tag(name: "menu")]
     public function getVehiculeCollection(): JsonResponse
     {
-        $vehicules = $this->vehiculeRepository->findAll();
+        $user = $this->security->getUser();
+        $vehicules = $this->vehiculeRepository->findVehiculesFromUser($user);
 
         if ($vehicules) {
             return $this->vehiculeService->findVehicules(
@@ -36,13 +53,14 @@ class VehiculeController extends AbstractController
             );
         }
 
-        return $this->vehiculeService->notFoundVehicules();
+        return $this->apiService->respondNotFound(sprintf('Vehicules not found'));
     }
 
-    #[Route('/vehicule/{id}', name: 'vehicule_read_item', methods: 'GET')]
+    #[Route('/vehicule/{id}', methods: 'GET')]
     public function getVehiculeItem(int $id): JsonResponse
     {
-        $vehicule = $this->vehiculeRepository->find($id);
+        $user = $this->security->getUser();
+        $vehicule = $this->vehiculeRepository->findVehiculeFromUser($user, $id);
 
         if ($vehicule) {
             return $this->vehiculeService->findVehicules(
@@ -51,36 +69,40 @@ class VehiculeController extends AbstractController
             );
         }
 
-        return $this->vehiculeService->notFoundVehicules();
+        return $this->apiService->respondNotFound(sprintf('Vehicule %s not found', $vehicule));
     }
 
-    #[Route('/vehicule/create', name: 'vehicule_create_item', methods: 'POST')]
+    #[Route('/vehicule/create', methods: 'POST')]
     public function createVehicule(Request $request): JsonResponse
     {
-        return $this->vehiculeService->editVehicule($request, null);
+        $user = $this->security->getUser();
+
+        return $this->vehiculeService->editVehicule($request, $user, null);
     }
 
-    #[Route('/vehicule/{id}/update', name: 'vehicule_update_item', methods: 'PUT')]
+    #[Route('/vehicule/{id}/update', methods: 'PUT')]
     public function updateVehicule(Request $request, int $id): JsonResponse
     {
-        $vehicule = $this->vehiculeRepository->find($id);
+        $user = $this->security->getUser();
+        $vehicule = $this->vehiculeRepository->findVehiculeFromUser($user, $id);
 
         if ($vehicule) {
-            return $this->vehiculeService->editVehicule($request, $vehicule);
+            return $this->vehiculeService->editVehicule($request, $user, $vehicule);
         }
 
-        return $this->vehiculeService->notFoundVehicules();
+        return $this->apiService->respondNotFound(sprintf('Vehicule %s not found', $vehicule));
     }
 
-    #[Route('/vehicule/{id}/delete', name: 'vehicule_delete_item', methods: 'DELETE')]
+    #[Route('/vehicule/{id}/delete', methods: 'DELETE')]
     public function deleteVehicule(int $id): JsonResponse
     {
-        $vehicule = $this->vehiculeRepository->find($id);
+        $user = $this->security->getUser();
+        $vehicule = $this->vehiculeRepository->findVehiculeFromUser($user, $id);
 
         if ($vehicule) {
             return $this->vehiculeService->deleteVehicule($vehicule);
         }
 
-        return $this->vehiculeService->notFoundVehicules();
+        return $this->apiService->respondNotFound(sprintf('Vehicule %s not found', $vehicule));
     }
 }

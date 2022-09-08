@@ -2,17 +2,21 @@
 
 namespace App\Tests\Maintenances\Controller;
 
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class GetMaintenanceTest extends WebTestCase
 {
-    /** @test */
-    public function getMaintenanceItemTest()
+    public function testGetMaintenanceItem()
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
+
         $client->jsonRequest(
             'GET',
-            'http://localhost:8080/vehicule/1/maintenance/1'
+            '/api/vehicule/1/maintenance/1'
         );
 
         $response = $client->getResponse();
@@ -21,13 +25,16 @@ class GetMaintenanceTest extends WebTestCase
         self::assertNotEmpty($content);
     }
 
-    /** @test */
-    public function getMaintenanceItemNotFoundTest()
+    public function testGetMaintenanceItemNotFound()
     {
         $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail('admin@api.com');
+        $client->loginUser($user);
+
         $client->jsonRequest(
             'GET',
-            'http://localhost:8080/vehicule/1/maintenance/122'
+            '/api/vehicule/1/maintenance/122'
         );
 
         $response = $client->getResponse();
