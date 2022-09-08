@@ -1,6 +1,6 @@
-# API made with Symfony and API Platform
+# API made with Symfony 6
 
-An API built with API Platform on a Symfony 6 with php 8 application.
+An API built with Symfony 6 with php 8 application.
 
 The database is built with MySQL8.
 
