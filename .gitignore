@@ -12,6 +12,7 @@
 
 /.idea/
 /docker-compose.yml
+/docker/nginx/mycar*
 
 ###> symfony/phpunit-bridge ###
 /.phpunit.result.cache
