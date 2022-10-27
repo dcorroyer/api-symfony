@@ -52,10 +52,6 @@ import **Mycar.postman_collection.json** in **Postman** to be able to test endpo
     openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
     passphrase: password
 
-A file `./dc` is used to wrap the docker-compose commands, example:
-
-    ./dc up -d <=> docker-compose up -d
-
 A `Makefile` is up to provide some useful commands:
 
     make up <=> docker-compose up -d
