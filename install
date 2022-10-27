@@ -37,14 +37,8 @@ if [[ -n "$path" ]]; then
 fi
 
 docker-compose run --rm php composer install
-
-docker-compose run --rm php php bin/console d:d:c
 docker-compose run --rm php php bin/console doctrine:migrations:migrate
-
-docker-compose run --rm php php bin/console --env=test doctrine:database:create
 docker-compose run --rm php php bin/console --env=test doctrine:migrations:migrate
-
-sudo chmod -R 777 .
 
 sudo /bin/sh -c 'echo "127.0.0.1 mycar.local" >> /etc/hosts'
 

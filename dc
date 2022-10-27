@@ -1,4 +1,0 @@
-# This script is a wrapper around docker-compose that allows services to be run under the current user
-
-# shellcheck disable=SC2068
-USER_ID=`id -u` GROUP_ID=`id -g` docker-compose $@
