@@ -34,7 +34,8 @@ services:
       - "4306:3306"
     volumes:
       - db-data:/var/lib/mysql
-    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+      - ./docker/mysql/init.sql:/data/application/init.sql
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --init-file /data/application/init.sql
     restart: always # always restart unless stopped manually
     environment:
       MYSQL_ROOT_PASSWORD: secret
