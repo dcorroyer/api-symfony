@@ -17,8 +17,14 @@ rebuild:
 back:
 	docker-compose exec php bash
 
-composer:
+composer-install:
 	docker-compose run --rm php composer install
+
+composer-update:
+	docker-compose run --rm php composer update
+
+tests:
+	docker-compose run --rm php vendor/bin/phpunit
 
 dbcreate:
 	docker-compose run --rm php php bin/console d:d:c
