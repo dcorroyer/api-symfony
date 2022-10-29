@@ -24,15 +24,13 @@ class MaintenanceController extends AbstractController
      * @param MaintenanceService $maintenanceService
      * @param Security $security
      * @param VehiculeRepository $vehiculeRepository
-     * @param VehiculeService $vehiculeService
      */
     public function __construct(
-        private readonly ApiService            $apiService,
+        private readonly ApiService $apiService,
         private readonly MaintenanceRepository $maintenanceRepository,
-        private readonly MaintenanceService    $maintenanceService,
-        private readonly Security              $security,
-        private readonly VehiculeRepository    $vehiculeRepository,
-        private readonly VehiculeService       $vehiculeService,
+        private readonly MaintenanceService $maintenanceService,
+        private readonly Security $security,
+        private readonly VehiculeRepository $vehiculeRepository,
     )
     {
     }
@@ -49,7 +47,7 @@ class MaintenanceController extends AbstractController
 
         $maintenances = $vehicule->getMaintenances();
 
-        if ($maintenances) {
+        if (!empty($maintenances)) {
             return $this->maintenanceService->findMaintenances(
                 $maintenances,
                 'maintenance:read:collection'
@@ -78,7 +76,7 @@ class MaintenanceController extends AbstractController
             );
         }
 
-        return $this->apiService->respondNotFound(sprintf('Maintenance %s not found', $maintenance));
+        return $this->apiService->respondNotFound(sprintf('Maintenance %s not found', $maintenanceId));
     }
 
     #[Route('/vehicule/{id}/maintenance/create', methods: 'POST')]
@@ -110,7 +108,7 @@ class MaintenanceController extends AbstractController
             return $this->maintenanceService->editMaintenance($request, $maintenance, $vehicule);
         }
 
-        return $this->apiService->respondNotFound(sprintf('Maintenance %s not found', $maintenance));
+        return $this->apiService->respondNotFound(sprintf('Maintenance %s not found', $maintenanceId));
     }
 
     #[Route('/vehicule/{vehiculeId}/maintenance/{maintenanceId}/delete', methods: 'DELETE')]
@@ -129,6 +127,6 @@ class MaintenanceController extends AbstractController
             return $this->maintenanceService->deleteMaintenance($maintenance);
         }
 
-        return $this->apiService->respondNotFound(sprintf('Maintenance %s not found', $maintenance));
+        return $this->apiService->respondNotFound(sprintf('Maintenance %s not found', $maintenanceId));
     }
 }

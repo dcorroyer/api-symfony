@@ -7,9 +7,6 @@ security:
                 class: App\Entity\User
                 property: email
     firewalls:
-        docs:
-            pattern: ^/api/docs
-            security: false
         login:
             pattern: ^/api/login
             stateless: true
@@ -30,7 +27,7 @@ security:
             provider: app_user_provider
 
     access_control:
-        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
 
 when@test:

@@ -24,8 +24,8 @@ class MaintenanceService
      */
     public function __construct(
         private readonly EntityManagerInterface $manager,
-        private readonly SerializerInterface    $serializer,
-        private readonly ValidatorInterface     $validator
+        private readonly SerializerInterface $serializer,
+        private readonly ValidatorInterface $validator
     )
     {
     }

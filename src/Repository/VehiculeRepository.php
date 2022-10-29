@@ -8,6 +8,14 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<Vehicule>
+ *
+ * @method Vehicule|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Vehicule|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Vehicule[]    findAll()
+ * @method Vehicule[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
 class VehiculeRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)

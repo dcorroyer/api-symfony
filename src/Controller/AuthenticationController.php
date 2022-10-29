@@ -20,7 +20,7 @@ class AuthenticationController extends AbstractController
      * @param EntityManagerInterface $entityManager
      */
     public function __construct(
-        private readonly ApiService             $apiService,
+        private readonly ApiService $apiService,
         private readonly EntityManagerInterface $entityManager
     )
     {
@@ -29,6 +29,7 @@ class AuthenticationController extends AbstractController
     /**
      * @param Request $request
      * @param UserPasswordHasherInterface $hasherInterface
+     *
      * @return JsonResponse
      */
     #[Route('/register', methods: 'POST')]
@@ -37,7 +38,7 @@ class AuthenticationController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         if ($data === null) {
-            return $request;
+            return json_decode($request);
         }
 
         $request->request->replace($data);
@@ -50,6 +51,7 @@ class AuthenticationController extends AbstractController
         }
 
         $user = new User();
+
         $user->setPassword($hasherInterface->hashPassword($user, $password))
             ->setEmail($email)
         ;
@@ -63,6 +65,7 @@ class AuthenticationController extends AbstractController
     /**
      * @param UserInterface $user
      * @param JWTTokenManagerInterface $JWTManager
+     *
      * @return JsonResponse
      */
     #[Route('/api/login_check', methods: 'POST')]

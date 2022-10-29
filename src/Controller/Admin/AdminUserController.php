@@ -14,14 +14,14 @@ use Symfony\Component\Serializer\SerializerInterface;
 class AdminUserController extends AbstractController
 {
     /**
-     * UserController constructor.
+     * AdminUserController constructor.
      *
      * @param SerializerInterface $serializer
      * @param UserRepository $userRepository
      */
     public function __construct(
         private readonly SerializerInterface $serializer,
-        private readonly UserRepository      $userRepository
+        private readonly UserRepository $userRepository
     )
     {
     }

@@ -40,3 +40,6 @@ dbcreate-test:
 
 dbupdate-test:
 	docker-compose run --rm php php bin/console --env=test doctrine:migrations:migrate
+
+dbfixtures-test:
+	docker-compose run --rm php php bin/console --env=test doctrine:fixtures:load

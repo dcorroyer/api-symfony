@@ -20,13 +20,13 @@ class VehiculeService
      * VehiculeService constructor.
      *
      * @param EntityManagerInterface $manager
-     * @param SerializerInterface    $serializer
-     * @param ValidatorInterface     $validator
+     * @param SerializerInterface $serializer
+     * @param ValidatorInterface $validator
      */
     public function __construct(
         private readonly EntityManagerInterface $manager,
-        private readonly SerializerInterface    $serializer,
-        private readonly ValidatorInterface     $validator,
+        private readonly SerializerInterface $serializer,
+        private readonly ValidatorInterface $validator,
     )
     {
     }

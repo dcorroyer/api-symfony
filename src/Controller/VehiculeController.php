@@ -5,13 +5,11 @@ namespace App\Controller;
 use App\Service\ApiService;
 use App\Service\VehiculeService;
 use App\Repository\VehiculeRepository;
-use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
 
 #[Route('/api')]
 class VehiculeController extends AbstractController
@@ -25,22 +23,15 @@ class VehiculeController extends AbstractController
      * @param VehiculeService $vehiculeService
      */
     public function __construct(
-        private readonly ApiService         $apiService,
-        private readonly Security           $security,
+        private readonly ApiService $apiService,
+        private readonly Security $security,
         private readonly VehiculeRepository $vehiculeRepository,
-        private readonly VehiculeService    $vehiculeService
+        private readonly VehiculeService $vehiculeService
     )
     {
     }
 
     #[Route('/vehicules', methods: 'GET')]
-    #[OA\Get(description: "list")]
-    #[OA\Response(
-        response: 200,
-        description: "Ok",
-        content: []
-    )]
-    #[OA\Tag(name: "menu")]
     public function getVehiculeCollection(): JsonResponse
     {
         $user = $this->security->getUser();
@@ -69,7 +60,7 @@ class VehiculeController extends AbstractController
             );
         }
 
-        return $this->apiService->respondNotFound(sprintf('Vehicule %s not found', $vehicule));
+        return $this->apiService->respondNotFound(sprintf('Vehicule %s not found', $id));
     }
 
     #[Route('/vehicule/create', methods: 'POST')]
@@ -90,7 +81,7 @@ class VehiculeController extends AbstractController
             return $this->vehiculeService->editVehicule($request, $user, $vehicule);
         }
 
-        return $this->apiService->respondNotFound(sprintf('Vehicule %s not found', $vehicule));
+        return $this->apiService->respondNotFound(sprintf('Vehicule %s not found', $id));
     }
 
     #[Route('/vehicule/{id}/delete', methods: 'DELETE')]
@@ -103,6 +94,6 @@ class VehiculeController extends AbstractController
             return $this->vehiculeService->deleteVehicule($vehicule);
         }
 
-        return $this->apiService->respondNotFound(sprintf('Vehicule %s not found', $vehicule));
+        return $this->apiService->respondNotFound(sprintf('Vehicule %s not found', $id));
     }
 }
